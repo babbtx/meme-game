@@ -17,3 +17,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Graphiti generators use spec but I don't
+spec
+
+# dev environment
+.ruby-gemset
+.idea
+.generators
+.rakeTasks
