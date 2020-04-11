@@ -9,6 +9,6 @@
 #
 FactoryBot.define do
   factory :user do
-    uuid { Faker::Internet.uuid }
+    token_subject { Faker::Internet.uuid }
   end
 end

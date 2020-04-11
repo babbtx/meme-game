@@ -18,7 +18,7 @@ class Answer < ApplicationRecord
   scope :by_user, ->(user) {
     where(user: user)
   }
-  scope :by_user_uuid, ->(uuid) {
-    joins(:user).where(users: {uuid: uuid})
+  scope :by_user_token_subject, ->(sub) {
+    joins(:user).where({users: {token_subject: sub}})
   }
 end

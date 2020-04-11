@@ -5,7 +5,7 @@ module SignIn
 
   def sign_in(user)
     @current_user = user
-    @authz_header = {'Authorization': "Bearer #{JWT.encode({sub: user.uuid}, 'secret')}"}
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({sub: user.token_subject}, 'secret')}"}
   end
 
   def sign_out

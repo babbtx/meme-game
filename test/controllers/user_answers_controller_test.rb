@@ -10,7 +10,7 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     answer = FactoryBot.create(:answer)
     another_users_answer = FactoryBot.create(:answer)
 
-    get user_answers_url(answer.user.uuid), as: :json
+    get user_answers_url(answer.user.token_subject), as: :json
     assert_response :success
 
     d = JSON.parse(response.body).with_indifferent_access

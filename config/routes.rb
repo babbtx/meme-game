@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   scope '/api/v1' do
     resources :answers, only: [:index, :show, :update]
-    resources :users, param: :uuid, only: [] do
+    resources :users, param: :token_subject, only: [] do
       resources :answers, controller: 'user_answers', only: [:index]
     end
   end
