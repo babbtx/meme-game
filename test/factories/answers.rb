@@ -4,7 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  url        :string           not null
-#  caption    :string
+#  captions   :json
 #  rating     :integer
 #  user_id    :bigint           not null
 #  game_id    :bigint           not null
@@ -17,6 +17,6 @@ FactoryBot.define do
     association :user, factory: :user
     association :game, factory: :game
     url { Faker::Internet.url }
-    caption { Faker::ChuckNorris.fact }
+    captions { [Faker::ChuckNorris.fact] }
   end
 end

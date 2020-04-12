@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2020_04_09_032822) do
 
   create_table "answers", force: :cascade do |t|
     t.string "url", null: false
-    t.string "caption"
+    t.json "captions"
     t.integer "rating"
     t.bigint "user_id", null: false
     t.bigint "game_id", null: false

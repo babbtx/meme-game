@@ -31,9 +31,9 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal 13, @answer.reload.rating
   end
 
-  test "cannot update caption" do
+  test "cannot update captions" do
     body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
-        caption: "new caption"
+        captions: ["joke goes here"]
     }}}
 
     patch answer_url(@answer.id), params: body, as: :json

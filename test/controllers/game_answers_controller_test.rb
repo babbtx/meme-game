@@ -11,7 +11,7 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     game_id = Faker::Number.number(digits: 4)
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
-        caption: answer_params.caption
+        captions: answer_params.captions
     }}}
 
     assert_changes ->{ Game.count } do
@@ -25,7 +25,7 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     game_id = Faker::Number.number(digits: 4)
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
-        caption: answer_params.caption
+        captions: answer_params.captions
     }}}
 
     post game_answers_url(game_id), params: body, as: :json
@@ -43,7 +43,7 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     answer_params = FactoryBot.build(:answer, user: current_user, game: game, rating: Faker::Number.number(digits: 2))
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
-        caption: answer_params.caption,
+        captions: answer_params.captions,
         rating: answer_params.rating
     }}}
 
@@ -54,8 +54,21 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     answer_id = d[:id]
     answer = Answer.find(answer_id)
     assert_equal answer_params.url, answer.url
-    assert_equal answer_params.caption, answer.caption
+    assert_equal answer_params.captions, answer.captions
     assert_equal answer_params.rating, answer.rating
+  end
+
+  test "answer requires captions array" do
+    game = FactoryBot.create(:game)
+    answer_params = FactoryBot.build(:answer, user: current_user, game: game)
+    body = {data: {type: 'answers', attributes: {
+        url: answer_params.url,
+        captions: 'this is not an array',
+        rating: answer_params.rating
+    }}}
+
+    post game_answers_url(game.id), params: body, as: :json
+    assert_response :bad_request
   end
 
   test "returns answers for game including those submitted by others" do
