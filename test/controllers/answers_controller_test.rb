@@ -16,14 +16,15 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
 
     j = JSON.parse(response.body).with_indifferent_access
     assert_equal 1, j[:data].length
-    d = j[:data][0]
-    assert_equal @answer.id.to_s, d[:id]
+    d = j[:data]
+    assert_equal @answer.id.to_s, d[0][:id]
   end
 
   test "update rating" do
     body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
         rating: 13
     }}}
+
     patch answer_url(@answer.id), params: body, as: :json
     assert_response :success
 
@@ -34,6 +35,7 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
     body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
         caption: "new caption"
     }}}
+
     patch answer_url(@answer.id), params: body, as: :json
     assert_response :bad_request
   end
