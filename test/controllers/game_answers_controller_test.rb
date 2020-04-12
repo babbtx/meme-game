@@ -57,4 +57,18 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal answer_params.caption, answer.caption
     assert_equal answer_params.rating, answer.rating
   end
+
+  test "returns answers for game including those submitted by others" do
+    game = FactoryBot.create(:game)
+    answer1 = FactoryBot.create(:answer, game: game)
+    answer2 = FactoryBot.create(:answer, game: game)
+    answer_for_another_game = FactoryBot.create(:answer)
+
+    get game_answers_url(game.id), as: :json
+    assert_response :success
+
+    d = JSON.parse(response.body).with_indifferent_access[:data]
+    assert_equal 2, d.length
+    assert_equal [answer1.id.to_s, answer2.id.to_s], d.collect {|dd| dd[:id] }
+  end
 end

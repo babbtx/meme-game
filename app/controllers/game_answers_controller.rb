@@ -2,6 +2,8 @@ class GameAnswersController < ApplicationController
   before_action :find_or_create_game
 
   def index
+    answers = AnswerResource.all(params, Answer.for_game(params[:game_id]))
+    render jsonapi: answers
   end
 
   def create

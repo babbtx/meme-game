@@ -21,4 +21,8 @@ class Answer < ApplicationRecord
   scope :by_user_token_subject, ->(sub) {
     joins(:user).where({users: {token_subject: sub}})
   }
+  scope :for_game, ->(game) {
+    game_id = Integer === game ? game.id : game
+    where(game_id: game_id)
+  }
 end
