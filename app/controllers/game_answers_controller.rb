@@ -1,5 +1,5 @@
 class GameAnswersController < ApplicationController
-  before_action :find_or_create_game
+  before_action :find_or_create_game, :add_user_to_game
 
   def index
     answers = AnswerResource.all(params, Answer.for_game(params[:game_id]))
@@ -24,7 +24,11 @@ class GameAnswersController < ApplicationController
   # but we're trying to simplify demonstrating APIs
   def find_or_create_game
     @game = Game.find_or_create_by!(id: params[:game_id])
-    # also add player to game
+  rescue ActiveRecord::RecordInvalid => ex
+    render_invalid_request(ex)
+  end
+
+  def add_user_to_game
     unless @game.players.exists?(id: current_user.id)
       @game.players << current_user
     end

@@ -71,4 +71,9 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, d.length
     assert_equal [answer1.id.to_s, answer2.id.to_s], d.collect {|dd| dd[:id] }
   end
+
+  test "proper error if getting answers for invalid game identifier" do
+    get game_answers_url('foo'), as: :json
+    assert_response :bad_request
+  end
 end
