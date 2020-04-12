@@ -25,7 +25,7 @@ module CurrentUser
   # raises UserNotFound (which by default renders unauthorized)
   def current_user!
     @current_user = current_user || User.create!(token_subject: @authz_jwt[:sub])
-  rescue ActiveRecord::RecordNotSaved => ex
+  rescue ActiveRecord::ActiveRecordError => ex
     raise UserNotFound.new(ex.message)
   end
 
