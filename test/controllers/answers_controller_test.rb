@@ -14,13 +14,16 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
     get answers_url, as: :json
     assert_response :success
 
-    d = JSON.parse(response.body).with_indifferent_access
-    assert_equal 1, d[:data].length
-    assert_equal @answer.id.to_s, d[:data][0][:id]
+    j = JSON.parse(response.body).with_indifferent_access
+    assert_equal 1, j[:data].length
+    d = j[:data][0]
+    assert_equal @answer.id.to_s, d[:id]
   end
 
   test "update rating" do
-    body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {rating: 13}}}
+    body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
+        rating: 13
+    }}}
     patch answer_url(@answer.id), params: body, as: :json
     assert_response :success
 
@@ -28,7 +31,9 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "cannot update caption" do
-    body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {caption: "new caption"}}}
+    body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
+        caption: "new caption"
+    }}}
     patch answer_url(@answer.id), params: body, as: :json
     assert_response :bad_request
   end
