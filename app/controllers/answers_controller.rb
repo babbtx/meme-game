@@ -22,6 +22,6 @@ class AnswersController < ApplicationController
   protected
 
   def scope_for_user
-    Answer.by_user(current_user!)
+    Answer.by_user(current_user)
   end
 end
