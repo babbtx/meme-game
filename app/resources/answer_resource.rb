@@ -7,4 +7,13 @@ class AnswerResource < ApplicationResource
   attribute :rating, :integer, writable: true
   attribute :created_at, :datetime
 
+  attr_accessor :user, :game
+  before_save :set_private_attributes
+
+  private
+
+  def set_private_attributes(model)
+    model.user = user if user
+    model.game = game if game
+  end
 end
