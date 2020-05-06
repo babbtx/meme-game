@@ -24,7 +24,7 @@ module JwtSecured
 
   def authz_bearer_value
     if request.headers['Authorization'].present?
-      request.headers['Authorization'].split(/\s+/).last
+      request.headers['Authorization'].split(/\s+/).drop(1).join(' ')
     end
   end
 
