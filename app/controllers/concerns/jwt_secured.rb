@@ -13,12 +13,15 @@ module JwtSecured
   # sets @authz_jwt with the decoded JWT or the mock token
   def authenticate_request!
     @authz_jwt ||= begin
+      val = nil
       if mock_token.present?
-        JSON.parse(mock_token).with_indifferent_access
+        val = JSON.parse(mock_token).with_indifferent_access
       else
         payload, header = JWT.decode(authz_bearer_value, nil, false)
-        payload.with_indifferent_access
+        val = payload.with_indifferent_access
       end
+      logger.info "Bearer = #{val}"
+      val
     end
   end
 
