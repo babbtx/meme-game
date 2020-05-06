@@ -22,6 +22,30 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal @answer.id.to_s, d.last[:id]
   end
 
+  test "creates user and data on the fly" do
+    user = FactoryBot.build(:user)
+    sign_in(user)
+    assert_equal 1, User.count
+    assert_changes ->{ User.count } do
+      get answers_url, as: :json
+      assert_response :success
+    end
+    j = JSON.parse(response.body).with_indifferent_access
+    assert_equal DEFAULT_ANSWERS_COUNT, j[:data].length
+  end
+
+  test "creates user and data on the fly with a mock token" do
+    user = FactoryBot.build(:user)
+    @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
+    assert_equal 1, User.count
+    assert_changes ->{ User.count } do
+      get answers_url, as: :json
+      assert_response :success
+    end
+    j = JSON.parse(response.body).with_indifferent_access
+    assert_equal DEFAULT_ANSWERS_COUNT, j[:data].length
+  end
+
   test "update rating" do
     body = {data: {type: 'answers', id: @answer.id.to_s, attributes: {
         rating: 13
