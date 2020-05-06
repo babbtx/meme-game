@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     resources :games, only: [] do
       resources :answers, controller: 'game_answers', only: [:index, :create]
     end
-    resources :users, param: :token_subject, only: [] do
+    resources :users, param: :token_subject, constraints: {token_subject: /[^\/]+/}, only: [] do
       resources :answers, controller: 'user_answers', only: [:index]
     end
   end

@@ -28,6 +28,16 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "creates user on the fly with a mock token" do
+    user = FactoryBot.build(:user)
+    @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
+    assert_equal 0, User.count
+    assert_changes ->{ User.count } do
+      get user_answers_url('user.0@example.com'), as: :json
+      assert_response :success
+    end
+  end
+
   test "returns proper error if no token" do
     user = FactoryBot.build(:user)
     assert_no_changes ->{ User.count } do
