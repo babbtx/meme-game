@@ -7,4 +7,4 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # create a user.0@example.com so we always have some answers to play with
-User.create!(token_subject: 'user.0@example.com')
+User.create!(token_subject: 'user.0')

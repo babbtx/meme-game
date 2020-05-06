@@ -33,7 +33,7 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
     assert_equal 0, User.count
     assert_changes ->{ User.count } do
-      get user_answers_url('user.0@example.com'), as: :json
+      get user_answers_url('user.0'), as: :json
       assert_response :success
     end
   end
