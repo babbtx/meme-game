@@ -26,3 +26,4 @@ spec
 .idea
 .generators
 .rakeTasks
+.env
