@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(version: 2020_04_09_032822) do
     t.index ["token_subject"], name: "index_users_on_token_subject", unique: true
   end
 
-  add_foreign_key "answers", "games"
-  add_foreign_key "answers", "users"
-  add_foreign_key "game_players", "games"
-  add_foreign_key "game_players", "users", column: "player_id"
+  add_foreign_key "answers", "games", on_delete: :cascade
+  add_foreign_key "answers", "users", on_delete: :cascade
+  add_foreign_key "game_players", "games", on_delete: :cascade
+  add_foreign_key "game_players", "users", column: "player_id", on_delete: :cascade
 end

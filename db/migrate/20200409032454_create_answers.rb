@@ -4,8 +4,8 @@ class CreateAnswers < ActiveRecord::Migration[6.0]
       t.string :url, null: false
       t.json :captions
       t.integer :rating
-      t.references :user, null: false, foreign_key: true
-      t.references :game, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: {on_delete: :cascade}
+      t.references :game, null: false, foreign_key: {on_delete: :cascade}
 
       t.timestamps
     end
