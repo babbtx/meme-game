@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   scope '/api/v1' do
     resources :answers, only: [:index, :show, :update]
-    resources :games, only: [] do
+    resources :games, only: [:create] do
       resources :answers, controller: 'game_answers', only: [:index, :create]
     end
     resources :users, param: :token_subject, constraints: {token_subject: /[^\/]+/}, only: [] do
