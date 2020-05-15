@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get '/', to: redirect('https://github.com/babbtx/meme-game')
+
   scope '/api/v1' do
     resources :answers, only: [:index, :show, :update]
     resources :games, only: [:create] do
