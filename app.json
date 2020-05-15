@@ -1,0 +1,23 @@
+{
+  "name": "meme-game",
+  "description": "A toy API for an online game of crafting funny memes",
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "options": {
+        "version": "12"
+      }
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
+}
