@@ -18,6 +18,17 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal user2_answer.id.to_s, d[:data].last[:id]
   end
 
+  test "user can view another users specific answer" do
+    sign_in(FactoryBot.create(:user)) # user 1
+    user2_answer = FactoryBot.create(:answer)
+
+    get user_answer_url(user2_answer.user.token_subject, user2_answer.id), as: :json
+    assert_response :success
+
+    d = JSON.parse(response.body).with_indifferent_access
+    assert_equal user2_answer.id.to_s, d[:data][:id]
+  end
+
   test "creates user on the fly" do
     user = FactoryBot.build(:user)
     sign_in(user)

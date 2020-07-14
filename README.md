@@ -53,6 +53,7 @@ API | Description
 `POST /api/v1/games/:game_id/answers` | User submits a new meme, including image reference and captions
 `POST /api/v1/games` | User starts a new game, optionally inviting friends
 `GET /api/v1/users/:user_token_subject/answers` | User retrieves the memes shared by another user
+`GET /api/v1/users/:user_token_subject/answers/:id` | User retrieves a single meme shared by another user
 
 The following describes the `answer` resource, which is a meme created by a user.
 
