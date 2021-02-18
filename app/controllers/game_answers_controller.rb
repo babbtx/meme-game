@@ -2,7 +2,8 @@ class GameAnswersController < ApplicationController
   before_action :find_or_create_game, :add_user_to_game
 
   def index
-    answers = AnswerResource.all(params, Answer.for_game(params[:game_id]))
+    params.merge!(extra_fields: {answers: 'user_token_subject'})
+    answers = AnswerResource.all(params, Answer.includes(:user).for_game(params[:game_id]))
     render jsonapi: answers
   end
 
