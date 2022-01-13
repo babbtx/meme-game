@@ -1,5 +1,9 @@
 class GameAnswersController < ApplicationController
-  before_action :find_or_create_game, :add_user_to_game
+  include CurrentUser
+  skip_before_action :ensure_current_user, only: [ :index ]
+
+  before_action :find_or_create_game
+  before_action :add_user_to_game, only: [ :create ]
 
   def index
     params.merge!(extra_fields: {answers: 'user_token_subject'})
@@ -29,6 +33,7 @@ class GameAnswersController < ApplicationController
     render_invalid_request(ex)
   end
 
+  # also add the user to the game when the user submits a meme for a game
   def add_user_to_game
     unless @game.players.exists?(id: current_user.id)
       @game.players << current_user

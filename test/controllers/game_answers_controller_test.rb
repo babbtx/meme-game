@@ -6,14 +6,53 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
     sign_in(FactoryBot.create(:user))
   end
 
+  test "answering creates a user on the fly" do
+    user = FactoryBot.build(:user)
+    sign_in(user)
+    assert_equal 1, User.count
+
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
+    body = {data: {type: 'answers', attributes: {
+      url: answer_params.url,
+      captions: answer_params.captions
+    }}}
+
+    game = FactoryBot.create(:game)
+
+    assert_changes ->{ User.count } do
+      post game_answers_url(game.id), params: body, as: :json
+      assert_response :created
+    end
+  end
+
+  test "answering creates a user on the fly with a mock token" do
+    sign_out
+    user = FactoryBot.build(:user)
+    @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
+    assert_equal 1, User.count
+
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
+    body = {data: {type: 'answers', attributes: {
+      url: answer_params.url,
+      captions: answer_params.captions
+    }}}
+
+    game = FactoryBot.create(:game)
+
+    assert_changes ->{ User.count } do
+      post game_answers_url(game.id), params: body, as: :json
+      assert_response :created
+    end
+  end
+
   test "answering creates a game on the fly" do
-    answer_params = FactoryBot.build(:answer, user: current_user, game: nil)
-    game_id = Faker::Number.number(digits: 4)
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
         captions: answer_params.captions
     }}}
 
+    game_id = Faker::Number.number(digits: 4)
     assert_changes ->{ Game.count } do
       post game_answers_url(game_id), params: body, as: :json
       assert_response :created
@@ -21,13 +60,13 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "answering links user and game to answer" do
-    answer_params = FactoryBot.build(:answer, user: current_user, game: nil)
-    game_id = Faker::Number.number(digits: 4)
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
         captions: answer_params.captions
     }}}
 
+    game_id = Faker::Number.number(digits: 4)
     post game_answers_url(game_id), params: body, as: :json
     assert_response :created
 
@@ -39,14 +78,14 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "answer sets attributes" do
-    game = FactoryBot.create(:game)
-    answer_params = FactoryBot.build(:answer, user: current_user, game: game, rating: Faker::Number.number(digits: 2))
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil, rating: Faker::Number.number(digits: 2))
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
         captions: answer_params.captions,
         rating: answer_params.rating
     }}}
 
+    game = FactoryBot.create(:game)
     post game_answers_url(game.id), params: body, as: :json
     assert_response :created
 
@@ -59,13 +98,13 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "answer by user doesn't render user token attribute" do
-    answer_params = FactoryBot.build(:answer, user: current_user, game: nil)
-    game_id = Faker::Number.number(digits: 4)
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
     body = {data: {type: 'answers', attributes: {
       url: answer_params.url,
       captions: answer_params.captions
     }}}
 
+    game_id = Faker::Number.number(digits: 4)
     post game_answers_url(game_id), params: body, as: :json
     assert_response :created
 
@@ -75,14 +114,14 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "answer requires captions array" do
-    game = FactoryBot.create(:game)
-    answer_params = FactoryBot.build(:answer, user: current_user, game: game)
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil)
     body = {data: {type: 'answers', attributes: {
         url: answer_params.url,
         captions: 'this is not an array',
         rating: answer_params.rating
     }}}
 
+    game = FactoryBot.create(:game)
     post game_answers_url(game.id), params: body, as: :json
     assert_response :bad_request
   end
@@ -116,5 +155,30 @@ class GameAnswersControllerTest < ActionDispatch::IntegrationTest
   test "proper error if getting answers for invalid game identifier" do
     get game_answers_url('foo'), as: :json
     assert_response :bad_request
+  end
+
+  test "answering requires user token" do
+    sign_out
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({client_id: Faker::Internet.uuid}, 'password')}"}
+
+    answer_params = FactoryBot.build(:answer, user: nil, game: nil, rating: Faker::Number.number(digits: 2))
+    body = {data: {type: 'answers', attributes: {
+      url: answer_params.url,
+      captions: answer_params.captions,
+      rating: answer_params.rating
+    }}}
+
+    game = FactoryBot.create(:game)
+    post game_answers_url(game.id), params: body, as: :json
+    assert_response :unauthorized
+  end
+
+  test "getting game answers works for client credentials" do
+    sign_out
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({client_id: Faker::Internet.uuid}, 'password')}"}
+
+    answer = FactoryBot.create(:answer)
+    get game_answers_url(answer.game.id), as: :json
+    assert_response :success
   end
 end
