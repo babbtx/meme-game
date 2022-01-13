@@ -29,26 +29,6 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     assert_equal user2_answer.id.to_s, d[:data][:id]
   end
 
-  test "creates user on the fly" do
-    user = FactoryBot.build(:user)
-    sign_in(user)
-    assert_equal 0, User.count
-    assert_changes ->{ User.count } do
-      get user_answers_url(user.token_subject), as: :json
-      assert_response :success
-    end
-  end
-
-  test "creates user on the fly with a mock token" do
-    user = FactoryBot.build(:user)
-    @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
-    assert_equal 0, User.count
-    assert_changes ->{ User.count } do
-      get user_answers_url('user.0'), as: :json
-      assert_response :success
-    end
-  end
-
   test "returns proper error if no token" do
     user = FactoryBot.build(:user)
     assert_no_changes ->{ User.count } do
@@ -57,12 +37,13 @@ class UserAnswersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "returns proper error if token has no subject" do
+  test "works with client credentials" do
+    sign_out
     user = FactoryBot.build(:user)
-    authz_header = {'Authorization': "Bearer #{JWT.encode({email: "foo@example.com"}, 'password')}"}
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({client_id: Faker::Internet.uuid}, 'password')}"}
     assert_no_changes ->{ User.count } do
-      get user_answers_url(user.token_subject), headers: authz_header, as: :json
-      assert_response :unauthorized
+      get user_answers_url(user.token_subject), as: :json
+      assert_response :success
     end
   end
 end

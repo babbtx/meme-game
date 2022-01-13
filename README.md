@@ -53,8 +53,8 @@ API | Description
 `GET /api/v1/games/:game_id/answers` | User or client retrieves the memes of all players in the given game 
 `POST /api/v1/games/:game_id/answers` | User submits a new meme, including image reference and captions
 `POST /api/v1/games` | User starts a new game, optionally inviting friends
-`GET /api/v1/users/:user_token_subject/answers` | User retrieves the memes shared by another user
-`GET /api/v1/users/:user_token_subject/answers/:id` | User retrieves a single meme shared by another user
+`GET /api/v1/users/:user_token_subject/answers` | User or client retrieves the memes shared by another user
+`GET /api/v1/users/:user_token_subject/answers/:id` | User or client retrieves a single meme shared by another user
 
 The following describes the `answer` resource, which is a meme created by a user.
 
@@ -113,7 +113,8 @@ in order to focus on fine-grained access control use cases.
 
 * There is effectively no built-in authorization:
   * _Don't submit anything sensitive!_
-  * Any JWT access token with a `sub` attribute will do.
+  * Almost any JWT access token will do.
+  * A JWT access token with a `sub` claim is required for APIs that expect a user.
   * Even a "mock access token", like `Bearer {"sub": "username"}`
 * You don't need to generate your own content, if you don't want:
   * `GET /api/v1/answers` will generate and return memes for your user.
@@ -135,8 +136,8 @@ Here's a crash course on running a Rails API on your Mac.
 
 1. Install Homebrew because you're going to need PostgreSQL.
 1. Install RVM to help you install Ruby.
-1. Brew install PostgreSQL 12.2
-1. RVM install Ruby 2.6.5
+1. Brew install PostgreSQL
+1. RVM install Ruby 2.6.6
 1. Create a gemset to isolate this app's gems.
 1. Install the gems required by this app into that gemset.
 1. Create the database.
@@ -150,10 +151,10 @@ Here's the script:
 . ~/.rvm/scripts/rvm
 brew install postgresql
 pg_ctl -D /usr/local/var/postgres start
-rvm install ruby-2.6.5
+rvm install ruby-2.6.6
 cd /path/to/cloned/repo
 rvm gemset create meme-game
-rvm use ruby-2.6.5@meme-game
+rvm use ruby-2.6.6@meme-game
 bundle
 rake db:setup
 rails s
@@ -162,3 +163,4 @@ rails s
 ### The DIY way -- On your non-Mac
 
 All of this stuff works on other operating systems. Good luck with that. 
+~~~~
