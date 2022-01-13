@@ -5,27 +5,28 @@ It is written in Ruby on Rails and backed by a PostgreSQL database.
 
 ## Background
 
-Organizations are seeking ways to remove the implementation of
-business rules for fine-grained access from API developer code,
-and move them to a more centralized model of management.
+Organizations are seeking ways to decouple business rules
+and fine-grained authorization logic from core application logic and features
+and move authorization to a more centralized model for management.
 
 Their drivers:
+* Faster time to market for initiatives around API platforms, data privacy, risk and fraud, and user experience
 * Data-privacy regulations like GDPR and CCPA give citizens more control over their data
-* Faster time to market for initiatives around API platforms, data privacy, and user experience
+* Decreasing transactional fraud and account takeovers with continuous risk assessment
 * Less mistakes and breaches through consistency in approach and execution 
 * Decreased time to audit and test through centralized management 
 
-[PingDataGovernance](https://www.pingidentity.com/en/software/pingdatagovernance.html)
-is a software tool that integrates into your API layer
-to provide fine-grained access control and data security.
+[PingAuthorize](https://www.pingidentity.com/en/software/pingauthorize.html)
+is a software solution that integrates into your application and API services
+to externalize fine-grained authorization and data security.
 Through centralized policy enforcement, dynamic authorization,
 and attribute-based access control (ABAC), 
 organizations can externalize business logic
-from API developer code and achieve their goals.
+from application and API code and achieve their goals.
 
 This toy API provides some common patterns of RESTful APIs. You can
-use this to play with PingDataGovernance's features for fine-grained
-access control, data masking, and data filtering.
+use this to play with PingAuthorize's features for dynamic authorization,
+fine-grained access control, data masking, and data filtering.
 
 # The Game
 
