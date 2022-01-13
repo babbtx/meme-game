@@ -1,4 +1,6 @@
 class AnswersController < ApplicationController
+  include CurrentUser
+
   def index
     answers = AnswerResource.all(params, scope_for_user)
     render jsonapi: answers

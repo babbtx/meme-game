@@ -47,10 +47,10 @@ The following table describes the API endpoints. Each API requires an OAuth2 Bea
 API | Description
 --- | -----------
 `GET /api/v1/answers` | User retrieves all of their previous memes across all games
-`GET /api/v1/answers/:id` | User retrieves only a single meme from a previous game
-`PATCH /api/v1/answers/:id` | User updates a previous meme given in a previous game
-`PUT /api/v1/answers/:id` | User updates a previous meme given in a previous game
 `GET /api/v1/games/:game_id/answers` | User retrieves the memes of all players in the given game 
+`GET /api/v1/answers/:id` | User retrieves only a single meme of theirs from a previous game
+`PATCH /api/v1/answers/:id` | User updates a previous meme of theirs from a previous game
+`PUT /api/v1/answers/:id` | User updates a previous meme of theirs from a previous game
 `POST /api/v1/games/:game_id/answers` | User submits a new meme, including image reference and captions
 `POST /api/v1/games` | User starts a new game, optionally inviting friends
 `GET /api/v1/users/:user_token_subject/answers` | User retrieves the memes shared by another user

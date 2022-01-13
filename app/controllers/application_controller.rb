@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::API
   include JwtSecured
-  include CurrentUser
 
   rescue_from Graphiti::Errors::InvalidRequest, with: :render_invalid_request
 

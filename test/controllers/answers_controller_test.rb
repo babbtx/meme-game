@@ -9,6 +9,13 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
     @answer = FactoryBot.create(:answer, user: current_user)
   end
 
+  test "requires user token" do
+    sign_out
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({client_id: Faker::Internet.uuid}, 'password')}"}
+    get answers_url, as: :json
+    assert_response :unauthorized
+  end
+
   test "only returns answers for the current user" do
     another_users_answer = FactoryBot.create(:answer)
     assert_equal DEFAULT_ANSWERS_COUNT*2 + 2, Answer.count
@@ -35,6 +42,7 @@ class AnswersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates user and data on the fly with a mock token" do
+    sign_out
     user = FactoryBot.build(:user)
     @authz_header = {'Authorization': %[Bearer {"active": true, "sub": "#{user.token_subject}"}]}
     assert_equal 1, User.count
