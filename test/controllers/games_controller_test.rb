@@ -28,4 +28,11 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
     post games_url, params: body, as: :json
     assert_response :unprocessable_entity
   end
+
+  test "requires user token" do
+    sign_out
+    @authz_header = {'Authorization': "Bearer #{JWT.encode({client_id: Faker::Internet.uuid}, 'password')}"}
+    post games_url, as: :json
+    assert_response :unauthorized
+  end
 end

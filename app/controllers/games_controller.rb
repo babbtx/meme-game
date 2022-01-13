@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  include CurrentUser
 
   def create
     game = GameResource.build(params)
